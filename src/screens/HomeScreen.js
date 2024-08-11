@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  ScrollView,
   Text,
   ActivityIndicator,
   RefreshControl,
+  TouchableOpacity,
+  Image,
+  FlatList,
 } from "react-native";
-import { tw } from "nativewind";
-import ProductList from "../components/ProductList";
-import { fetchProducts } from "../services/api"; 
+import { fetchProducts } from "../services/api";
 
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
@@ -39,20 +39,41 @@ const HomeScreen = ({ navigation }) => {
     getProducts();
   };
 
+  const renderProductItem = ({ item }) => (
+    <TouchableOpacity
+      className="p-4 bg-white mb-4 rounded-lg flex-row items-center shadow"
+      onPress={() => navigation.navigate("ProductInfo", { productId: item.id })}
+    >
+      <Image
+        source={{ uri: item.mainImage }}
+        className="w-16 h-16 rounded-lg mr-4"
+      />
+      <View className="flex-1">
+        <Text className="text-lg font-bold text-gray-800">{item.name}</Text>
+        <Text className="text-base text-gray-600">
+          {item.price.amount} {item.price.currency}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+
   if (loading) {
     return (
-      <View style={tw`flex-1 justify-center items-center`}>
+      <View className="flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#1D4ED8" />
-        <Text style={tw`mt-4 text-lg`}>Loading products...</Text>
+        <Text className="mt-4 text-lg">Loading products...</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={tw`flex-1 justify-center items-center p-4`}>
-        <Text style={tw`text-lg text-red-500`}>{error}</Text>
-        <Text style={tw`mt-4 text-blue-500 underline`} onPress={getProducts}>
+      <View className="flex-1 justify-center items-center p-4">
+        <Text className="text-lg text-red-500 text-center">{error}</Text>
+        <Text
+          className="mt-4 text-lg text-blue-500 underline"
+          onPress={getProducts}
+        >
           Retry
         </Text>
       </View>
@@ -60,9 +81,12 @@ const HomeScreen = ({ navigation }) => {
   }
 
   return (
-    <View style={tw`flex-1 p-4`}>
-      <ScrollView
-        contentContainerStyle={tw`flex-grow`}
+    <View className="flex-1 p-4 bg-gray-100">
+      <FlatList
+        data={products}
+        renderItem={renderProductItem}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={{ paddingBottom: 16 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -70,9 +94,7 @@ const HomeScreen = ({ navigation }) => {
             colors={["#1D4ED8"]}
           />
         }
-      >
-        <ProductList products={products} navigation={navigation} />
-      </ScrollView>
+      />
     </View>
   );
 };

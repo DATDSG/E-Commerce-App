@@ -1,52 +1,48 @@
 import React from "react";
 import { View, Text, Image, ScrollView, Button } from "react-native";
-import { tw } from "nativewind";
 import useStore from "../store/store";
 
 const DetailsScreen = ({ route, navigation }) => {
-  const { product } = route.params;
+  const { product } = route.params || {};
   const { addToCart } = useStore();
 
+  if (!product) {
+    return (
+      <View className="flex-1 justify-center items-center p-5">
+        <Text className="text-center text-red-500 text-xl mb-4">
+          Product not found!
+        </Text>
+        <Button
+          title="Go Back"
+          onPress={() => navigation.goBack()}
+          color="#1D4ED8"
+        />
+      </View>
+    );
+  }
+
   return (
-    <ScrollView contentContainerStyle={tw`p-4 bg-white`}>
+    <ScrollView className="p-5 bg-white">
       <Image
         source={{ uri: product.mainImage }}
-        style={tw`w-full h-72 rounded-lg mb-4`}
+        className="w-full h-72 rounded-lg mb-5"
+        resizeMode="cover"
+        accessibilityLabel={`${product.name} image`}
       />
-      <Text style={tw`text-3xl font-bold text-gray-900 mb-2`}>
+      <Text className="text-2xl font-bold text-gray-900 mb-2">
         {product.name}
       </Text>
-      {product.brandName && (
-        <Text style={tw`text-lg text-gray-600 mb-4`}>
-          Brand: {product.brandName}
-        </Text>
-      )}
-      <Text style={tw`text-2xl font-bold text-green-600 mb-2`}>
+      <Text className="text-xl text-gray-600 mb-2">
         {product.price.amount} {product.price.currency}
       </Text>
-      <Text style={tw`text-base text-gray-800 mb-4`}>
+      <Text className="text-base text-gray-700 mb-4">
         {product.description}
-      </Text>
-      {product.sizes.length > 0 && (
-        <Text style={tw`text-sm text-gray-700 mb-4`}>
-          Available Sizes: {product.sizes.join(", ")}
-        </Text>
-      )}
-      <Text
-        style={tw`text-base font-semibold ${
-          product.stockStatus === "IN STOCK" ? "text-green-500" : "text-red-500"
-        } mb-4`}
-      >
-        {product.stockStatus === "IN STOCK" ? "In Stock" : "Out of Stock"}
       </Text>
       <Button
         title="Add to Cart"
-        onPress={() => {
-          addToCart(product);
-          navigation.navigate("Cart");
-        }}
-        disabled={product.stockStatus !== "IN STOCK"}
-        accessibilityLabel="Add product to cart"
+        onPress={() => addToCart(product)}
+        color="#1D4ED8"
+        accessibilityLabel={`Add ${product.name} to cart`}
       />
     </ScrollView>
   );

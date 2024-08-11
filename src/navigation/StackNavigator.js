@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
-import DetailsScreen from "../screens/DetailsScreen";
 import CartScreen from "../screens/CartScreen";
+import ProductInfo from "../components/ProductInfo";
 
 const Stack = createStackNavigator();
 
@@ -12,9 +12,12 @@ const screenOptions = {
 const MainStackNavigator = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Details" component={DetailsScreen} />
-      <Stack.Screen name="Cart" component={CartScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      <Stack.Screen
+        name="ProductInfo"
+        component={ProductInfo}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
@@ -27,12 +30,4 @@ const CartStackNavigator = () => {
   );
 };
 
-const DetailStackNavigator = () => {
-  return (
-    <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
-    </Stack.Navigator>
-  );
-};
-
-export { MainStackNavigator, CartStackNavigator, DetailStackNavigator };
+export { MainStackNavigator, CartStackNavigator };

@@ -5,6 +5,7 @@ import {
   CartStackNavigator,
   DetailStackNavigator,
   MainStackNavigator,
+  ProductInfoStackNavigator,
 } from "./StackNavigator";
 
 const Tab = createBottomTabNavigator();
@@ -44,16 +45,6 @@ const TabNavigator = () => {
             <MaterialIcons name="shopping-cart" size={size} color={color} />
           ),
           tabBarAccessibilityLabel: "Cart screen",
-        }}
-      />
-      <Tab.Screen
-        name="Details"
-        component={DetailStackNavigator}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <MaterialIcons name="info" size={size} color={color} />
-          ),
-          tabBarAccessibilityLabel: "Product details screen",
         }}
       />
     </Tab.Navigator>
